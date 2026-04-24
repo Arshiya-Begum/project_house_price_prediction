@@ -4,3 +4,4 @@
 *.pth
 *.ckpt
 output.csv
+input.csv
