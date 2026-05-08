@@ -7,13 +7,15 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import root_mean_squared_error
+# from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import cross_val_score
 
 #CONSTANTS
 # pickel files - incoming data are with raw features no imputer, scaler etc, hence pickeling pipeline as well, to do same preprocessing as the training data. The files are made and read by joblib. Why pickel files because you can make it and keep and use it later 
-MODEL_FILE = "model.pkl"
-PIPELINE_FILE = 'pipeline.pkl'
+FILE_PATH = "artifacts"
+os.makedirs(FILE_PATH, exist_ok=True)
+MODEL_FILE = os.path.join(FILE_PATH, "model.pkl")
+PIPELINE_FILE = os.path.join(FILE_PATH, 'pipeline.pkl')
 
 def build_pipeline(num_attribs, cat_attribs):
     # For numerical columns
@@ -69,6 +71,7 @@ if not os.path.exists(MODEL_FILE):
     model = RandomForestRegressor(random_state=42)
     model.fit(housing_prepared, housing_labels)
 
+    # 8. Save model and pipeline
     joblib.dump(model, MODEL_FILE)
     joblib.dump(pipeline, PIPELINE_FILE)
     print("Model is trained!!!")
@@ -82,5 +85,6 @@ else:
     predictions = model.predict(tranformed_input)
     input_data['median_house_value'] = predictions
 
-    input_data.to_csv("output.csv", index=False)
+    output_file_name = os.path.join(FILE_PATH, "output.csv")
+    input_data.to_csv(output_file_name, index=False)
     print("Inference is complete, Results saved to output.csv!!!")
