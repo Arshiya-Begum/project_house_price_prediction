@@ -3,5 +3,5 @@
 *.pt
 *.pth
 *.ckpt
-output.csv
+*output.csv
 input.csv
